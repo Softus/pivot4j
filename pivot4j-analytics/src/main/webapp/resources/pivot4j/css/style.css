@@ -274,12 +274,12 @@ body.report .pe-layout-pane-header {
 }
 
 .pivot-grid .col-hdr-cell,.pivot-grid .agg-hdr {
-	white-space: nowrap;
+	/*white-space: nowrap;*/
 }
 
 .pivot-grid .row-hdr-cell,.filter-grid .row-hdr-cell {
 	vertical-align: top;
-	white-space: nowrap;
+	/*white-space: nowrap;*/
 	background-image: none;
 }
 
@@ -288,7 +288,7 @@ body.report .pe-layout-pane-header {
 }
 
 .pivot-grid .agg-title {
-	white-space: nowrap;
+	/*white-space: nowrap;*/
 }
 
 .pivot-grid .agg-cell,.pivot-grid .agg-title {
