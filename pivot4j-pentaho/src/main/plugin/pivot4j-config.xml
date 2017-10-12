@@ -5,15 +5,9 @@
 	<!-- Appearance settings. -->
 	<appearances>
 		<ui-theme>
-			<default>redmond</default>
+			<default>aristo</default>
 			<available-themes>
 				<theme name="aristo" description="Aristo" />
-				<theme name="bootstrap" description="Bootstrap" />
-				<theme name="black-tie" description="Black-Tie" />
-				<theme name="cruze" description="Cruze" />
-				<theme name="humanity" description="Humanity" />
-				<theme name="redmond" description="Redmond" />
-				<theme name="rocket" description="Rocket" />
 			</available-themes>
 		</ui-theme>
 

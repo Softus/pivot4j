@@ -43,7 +43,7 @@
 
 	<appearances>
 		<ui-theme>
-			<default>redmond</default>
+			<default>aristo</default>
 			<available-themes>
 				<theme name="aristo" description="Aristo" />
 			</available-themes>
