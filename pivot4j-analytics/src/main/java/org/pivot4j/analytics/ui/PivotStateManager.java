@@ -77,6 +77,8 @@ public class PivotStateManager implements Serializable {
 		if (log.isInfoEnabled()) {
 			log.info("Using an existing view state : {}", viewId);
 		}
+
+		viewStateHolder.setExpires(1800);
 	}
 
 	@PreDestroy
