@@ -36,12 +36,12 @@
 				workbench._render();
 
 				var cubeList = PF("cubeList");
-				cubeList.render();
+				cubeList &amp;&amp; cubeList.render();
 			}
 
 			var mdxEditor = PF("mdxEditor");
 
-			if (!mdxEditor.getCodeMirrorInstance()) {
+			if (mdxEditor &amp;&amp; !mdxEditor.getCodeMirrorInstance()) {
 				mdxEditor.render();
 			}
 		}
@@ -64,7 +64,7 @@
 			<h:form id="toolbar-form">
 				<p:toolbar id="toolbar">
 					<f:facet name="left">
-						<p:selectBooleanButton 
+						<p:selectBooleanButton styleClass="hide-on-embed"
 							value="#{viewHandler.editable}"
 							title="#{msg['toolbar.edit.tooltip']}"
 							onLabel="#{msg['toolbar.edit']}"
@@ -72,7 +72,8 @@
 							onIcon="ui-icon-pencil"
 							offIcon="ui-icon-pencil"
 							disabled="#{!viewHandler.valid}"
-							rendered="#{!pivotStateManager.readOnly}">
+							rendered="#{!pivotStateManager.readOnly}"
+							widgetVar="editButton">
 							<p:ajax process="@this" oncomplete="document.location.reload();" />
 						</p:selectBooleanButton>
 						<p:separator
@@ -396,6 +397,7 @@
 		</pe:layoutPane>
 
 		<pe:layoutPane id="content-pane" position="center">
+			<!--
 			<f:facet name="header">
 				<h:panelGroup layout="block">
 					<h:panelGroup styleClass="ui-icon ui-icon-title ui-icon-document" />
@@ -405,6 +407,7 @@
 						rendered="#{!viewHandler.editable}" />
 				</h:panelGroup>
 			</f:facet>
+			!-->
 
 			<pe:layoutPane id="grid-header-pane" position="north"
 				rendered="#{viewHandler.editable}">

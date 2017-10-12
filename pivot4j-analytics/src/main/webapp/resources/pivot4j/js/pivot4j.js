@@ -136,6 +136,11 @@ function addTab(tab) {
 	setActiveViewId(tab.id);
 }
 
+function openTab(tab, viewId) {
+	tab && addTab(tab);
+	viewId && selectTab(viewId);
+}
+
 function createTab(tab) {
 	var name = tab.name;
 
@@ -156,7 +161,7 @@ function createTab(tab) {
 	var tabView = jQuery("#tab-panel");
 
 	var iframe = jQuery(document.createElement("iframe"));
-	iframe.attr("frameborder", "0").attr("src", url);
+	iframe.attr("frameborder", "0").attr("src", url).on("load", hideWaitDialog);
 
 	var link = jQuery(document.createElement("a"));
 	link.attr("href", "#view-" + tab.id);
@@ -181,11 +186,12 @@ function createTab(tab) {
 	}
 
 	var panel = jQuery(document.createElement("div"));
-	panel.attr("id", "view-" + tab.id);
-	panel.append(iframe);
+	panel.attr("id", "view-" + tab.id)
+		.append(iframe);
 
 	tabView.find("ul").append(header);
 	tabView.append(panel);
+	setTimeout(showWaitDialog, 0);
 }
 
 function closeActiveTab() {
@@ -242,9 +248,12 @@ function onReportSaved(args) {
 
 function selectTab(id) {
 	var index = getTabIndex(id);
+	if (index >= 0) {
+		var tabView = jQuery("#tab-panel").tabs("refresh");
+		tabView.tabs("option", "active", index);
 
-	var tabView = jQuery("#tab-panel");
-	tabView.tabs("select", index);
+		setActiveViewId(id);
+	}
 }
 
 function onTabClose(event) {
@@ -304,7 +313,7 @@ function onThemeChanged() {
 }
 
 function onViewResize() {
-	for ( var name in PrimeFaces.widgets) {
+	for (var name in PrimeFaces.widgets) {
 		var widget = PF(name);
 		if (widget.plot) {
 			widget.plot.replot();

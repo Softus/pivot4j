@@ -3,7 +3,11 @@ package org.pivot4j.analytics.ui;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -394,6 +398,7 @@ public class ViewHandler implements QueryListener, ModelChangeListener {
             LayoutOptions toolbarOptions = new LayoutOptions();
             toolbarOptions.addOption("resizable", false);
             toolbarOptions.addOption("closable", false);
+            toolbarOptions.addOption("initClosed", !view.isEditable());
 
             layoutOptions.setNorthOptions(toolbarOptions);
 

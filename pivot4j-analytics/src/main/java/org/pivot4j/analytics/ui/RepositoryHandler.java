@@ -79,13 +79,13 @@ public class RepositoryHandler implements ViewStateListener, Serializable {
 	protected void initialize() {
 		viewStateHolder.addViewStateListener(this);
 
-		ViewState state = viewStateHolder.createNewState();
-
-		if (state != null) {
-			viewStateHolder.registerState(state);
-
-			this.activeViewId = state.getId();
-		}
+//		ViewState state = viewStateHolder.createNewState();
+//
+//		if (state != null) {
+//			viewStateHolder.registerState(state);
+//
+//			this.activeViewId = state.getId();
+//		}
 	}
 
 	@PreDestroy
@@ -408,14 +408,28 @@ public class RepositoryHandler implements ViewStateListener, Serializable {
 			return;
 		}
 
+		RepositoryNode node = (RepositoryNode) selection;
+
+		if (!node.isLeaf()) {
+			node.setExpanded(true);
+			return;
+		}
+
+		String viewId = node.getViewId();
+
+		if (viewId != null) {
+			RequestContext requestContext = RequestContext.getCurrentInstance();
+			requestContext.addCallbackParam("viewId", viewId);
+			return;
+		}
+
+		viewId = UUID.randomUUID().toString();
+
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceBundle bundle = context.getApplication().getResourceBundle(
 				context, "msg");
 
-		RepositoryNode node = (RepositoryNode) selection;
 		ReportFile file = node.getObject();
-
-		String viewId = UUID.randomUUID().toString();
 
 		String name = file.getName();
 
@@ -457,6 +471,7 @@ public class RepositoryHandler implements ViewStateListener, Serializable {
 			return;
 		}
 
+		state.setEditable(false);
 		viewStateHolder.registerState(state);
 
 		if (log.isInfoEnabled()) {
@@ -671,23 +686,7 @@ public class RepositoryHandler implements ViewStateListener, Serializable {
 	}
 
 	public boolean isOpenEnabled() {
-		if (selection != null) {
-			RepositoryNode node = (RepositoryNode) selection;
-			ReportFile file = node.getObject();
-
-			if (!file.isDirectory()) {
-				List<ViewState> states = viewStateHolder.getStates();
-				for (ViewState state : states) {
-					if (file.equals(state.getFile())) {
-						return false;
-					}
-				}
-
-				return true;
-			}
-		}
-
-		return false;
+		return selection != null;
 	}
 
 	public boolean isDeleteEnabled() {
@@ -853,6 +852,9 @@ public class RepositoryHandler implements ViewStateListener, Serializable {
 
 			node.setExpanded(true);
 			node.setFilter(new DefaultExtensionFilter(settings.getExtension()));
+
+			node.setSelected(true);
+			setSelection(node);
 
 			rootNode.getChildren().add(node);
 		}

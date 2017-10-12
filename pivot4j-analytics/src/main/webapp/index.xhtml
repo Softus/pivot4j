@@ -59,25 +59,27 @@
 							title="#{msg['toolbar.new.tooltip']}" icon="ui-icon-document" />
 						<p:commandButton value="#{msg['toolbar.open']}"
 							action="#{repositoryHandler.open}"
-							oncomplete="addTab(args.report)"
+							oncomplete="openTab(args.report, args.viewId)"
 							update=":repository-form:repository-panel,toolbar,:growl"
 							title="#{msg['toolbar.open.tooltip']}" icon="ui-icon-folder-open"
-							disabled="#{!repositoryHandler.openEnabled}"
 							widgetVar="openButton" />
 						<p:commandButton value="#{msg['toolbar.save']}"
 							action="#{repositoryHandler.save}"
 							title="#{msg['toolbar.save.tooltip']}" icon="ui-icon-disk"
-							disabled="#{!workbenchHandler.saveEnabled}" />
+							disabled="#{!workbenchHandler.saveEnabled}"
+							rendered="false" />
 						<p:commandButton value="#{msg['toolbar.saveAs']}"
 							title="#{msg['toolbar.saveAs.tooltip']}" icon="ui-icon-disk"
 							action="#{repositoryHandler.suggestNewName}"
 							update=":new-form,:growl" oncomplete="PF('newReportDialog').show()"
-							disabled="#{!workbenchHandler.viewActive}" />
+							disabled="#{!workbenchHandler.viewActive}"
+							rendered="false" />
 						<p:commandButton value="#{msg['toolbar.delete']}"
 							title="#{msg['toolbar.delete.tooltip']}" icon="ui-icon-trash"
 							type="button" onclick="PF('confirmDeleteReportDialog').show();"
-							disabled="#{!workbenchHandler.deleteEnabled}" />
-						<p:separator />
+							disabled="#{!workbenchHandler.deleteEnabled}"
+							rendered="false" />
+						<p:separator rendered="false" />
 						<p:commandButton value="#{msg['toolbar.refresh']}"
 							title="#{msg['toolbar.refresh.tooltip']}" type="button"
 							icon="ui-icon-refresh" disabled="#{!workbenchHandler.viewActive}"
@@ -103,6 +105,12 @@
 							disabled="#{!workbenchHandler.viewValid}" />
 					</f:facet>
 					<f:facet name="right">
+						<p:commandButton value="#{msg['toolbar.edit']}"
+										 title="#{msg['toolbar.edit.tooltip']}" type="button"
+										 icon="ui-icon-pencil" disabled="#{!workbenchHandler.viewActive}"
+										 onclick="getActiveWindow().PF('editButton').jq.click();" />
+
+						<!--
 						<p:themeSwitcher id="theme-switcher"
 							value="#{workbenchHandler.theme}" widgetVar="themeSwitcher">
 							<f:selectItem itemLabel="#{msg['label.theme.default']}"
@@ -124,6 +132,7 @@
 						<p:commandButton value="#{msg['toolbar.about']}"
 							title="#{msg['toolbar.about.tooltip']}" type="button"
 							icon="ui-icon-info" onclick="PF('about').show(); return false;" />
+						!-->
 					</f:facet>
 				</p:toolbar>
 			</h:form>
@@ -175,7 +184,7 @@
 						title="#{msg['toolbar.open.tooltip']}"
 						action="#{repositoryHandler.open}"
 						update=":toolbar-form,repository-panel,navigator-menu,:growl"
-						oncomplete="addTab(args.report);" icon="ui-icon-folder-open"
+						oncomplete="openTab(args.report, args.viewId);" icon="ui-icon-folder-open"
 						rendered="#{!repositoryHandler.selection.object.directory}"
 						disabled="#{!repositoryHandler.openEnabled}" />
 					<p:menuitem value="#{msg['menu.new.folder']}"
@@ -201,7 +210,7 @@
 				</p:contextMenu>
 
 				<p:remoteCommand name="openReport"
-					action="#{repositoryHandler.open}" oncomplete="addTab(args.report)"
+					action="#{repositoryHandler.open}" oncomplete="openTab(args.report, args.viewId)"
 					update="repository-panel,:toolbar-form:toolbar,:growl" />
 				<pe:remoteCommand name="closeReport"
 					actionListener="#{repositoryHandler.close}"

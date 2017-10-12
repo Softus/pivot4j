@@ -8,11 +8,6 @@
  */
 package org.pivot4j.transform.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +17,11 @@ import org.olap4j.mdx.IdentifierNode;
 import org.olap4j.metadata.Cube;
 import org.olap4j.metadata.Member;
 import org.pivot4j.transform.ChangeSlicer;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public class ChangeSlicerImplIT extends AbstractTransformTestCase<ChangeSlicer> {
 
@@ -151,7 +151,7 @@ public class ChangeSlicerImplIT extends AbstractTransformTestCase<ChangeSlicer> 
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
 						+ "{([Promotion Media].[All Media], [Product].[All Products])} ON ROWS FROM [Sales] "
-						+ "WHERE CrossJoin({[Time].[1997], [Time].[1998]}, [Gender].[M])")));
+						+ "WHERE CrossJoin({[Time].[1997], [Time].[1998]}, [Gender].[All Gender].[M])")));
 	}
 
 	@Test
@@ -186,7 +186,7 @@ public class ChangeSlicerImplIT extends AbstractTransformTestCase<ChangeSlicer> 
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
 						+ "{([Promotion Media].[All Media], [Product].[All Products])} ON ROWS FROM [Sales] "
-						+ "WHERE CrossJoin([Time].[1997], [Gender].[M])")));
+						+ "WHERE CrossJoin([Time].[1997], [Gender].[All Gender].[M])")));
 	}
 
 	@Test
@@ -232,7 +232,7 @@ public class ChangeSlicerImplIT extends AbstractTransformTestCase<ChangeSlicer> 
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
 						+ "{([Promotion Media].[All Media], [Product].[All Products])} ON ROWS FROM [Sales] "
-						+ "WHERE CrossJoin(CrossJoin([Time].[1997], [Gender].[M]), [Marital Status].[S])")));
+						+ "WHERE CrossJoin(CrossJoin([Time].[1997], [Gender].[All Gender].[M]), [Marital Status].[All Marital Status].[S])")));
 	}
 
 	@Test
@@ -271,6 +271,6 @@ public class ChangeSlicerImplIT extends AbstractTransformTestCase<ChangeSlicer> 
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
 						+ "{([Promotion Media].[All Media], [Product].[All Products])} ON ROWS FROM [Sales] "
-						+ "WHERE CrossJoin(CrossJoin([Time].[1997], [Gender].[M]), [Marital Status].[S])")));
+						+ "WHERE CrossJoin(CrossJoin([Time].[1997], [Gender].[All Gender].[M]), [Marital Status].[All Marital Status].[S])")));
 	}
 }
