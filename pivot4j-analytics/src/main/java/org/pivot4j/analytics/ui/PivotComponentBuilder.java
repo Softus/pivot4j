@@ -1,11 +1,5 @@
 package org.pivot4j.analytics.ui;
 
-import static org.pivot4j.ui.CellTypes.AGG_VALUE;
-import static org.pivot4j.ui.CellTypes.LABEL;
-import static org.pivot4j.ui.CellTypes.VALUE;
-import static org.pivot4j.ui.table.TableCellTypes.FILL;
-import static org.pivot4j.ui.table.TableCellTypes.TITLE;
-
 import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -13,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 import javax.el.ExpressionFactory;
 import javax.el.MethodExpression;
@@ -51,6 +46,12 @@ import org.primefaces.component.panelgrid.PanelGrid;
 import org.primefaces.component.row.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.pivot4j.ui.CellTypes.AGG_VALUE;
+import static org.pivot4j.ui.CellTypes.LABEL;
+import static org.pivot4j.ui.CellTypes.VALUE;
+import static org.pivot4j.ui.table.TableCellTypes.FILL;
+import static org.pivot4j.ui.table.TableCellTypes.TITLE;
 
 public class PivotComponentBuilder extends
         AbstractRenderCallback<TableRenderContext> implements
@@ -533,7 +534,19 @@ public class PivotComponentBuilder extends
             String id = "txt-" + text.hashCode();
 
             text.setId(id);
-            text.setValue(labelText);
+
+            if (labelText.length() > 2 && labelText.charAt(0) == '|') {
+                StringTokenizer st = new StringTokenizer(labelText, "|");
+                if (st.hasMoreTokens()) {
+                    text.setValue(st.nextToken());
+                }
+                if (st.hasMoreTokens()) {
+                    text.setStyle(st.nextToken());
+                }
+            }
+            else {
+                text.setValue(labelText);
+            }
 
             if (context.getMember() != null) {
                 text.setTitle(context.getMember().getUniqueName());

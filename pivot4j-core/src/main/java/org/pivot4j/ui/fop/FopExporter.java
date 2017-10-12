@@ -8,19 +8,20 @@
  */
 package org.pivot4j.ui.fop;
 
-import static org.pivot4j.ui.CellTypes.LABEL;
-import static org.pivot4j.ui.CellTypes.VALUE;
-
+import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.OrientationRequested;
 
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -37,6 +38,9 @@ import org.pivot4j.ui.table.TableRenderContext;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
+
+import static org.pivot4j.ui.CellTypes.LABEL;
+import static org.pivot4j.ui.CellTypes.VALUE;
 
 public class FopExporter extends
 		AbstractContentRenderCallback<TableRenderContext> implements
@@ -322,6 +326,9 @@ public class FopExporter extends
 		this.userAgent = createUserAgent(fopFactory);
 
 		try {
+			fopFactory.setUserConfig(new DefaultConfigurationBuilder().build(
+				FopExporter.class.getResourceAsStream("userconfig.xml")));
+
 			Fop fop = createFop(getFopFactory(), getUserAgent(),
 					getOutputStream());
 
@@ -336,6 +343,12 @@ public class FopExporter extends
 
 			startPageSequence(context);
 		} catch (SAXException e) {
+			throw new PivotException(e);
+		}
+		catch (ConfigurationException e) {
+			throw new PivotException(e);
+		}
+		catch (IOException e) {
 			throw new PivotException(e);
 		}
 	}
@@ -454,8 +467,22 @@ public class FopExporter extends
 	public void renderContent(TableRenderContext context, String label,
 			Double value) {
 		try {
+			AttributesImpl attributes = new AttributesImpl();
+			if (label != null && label.length() > 2 && label.charAt(0) == '|') {
+				StringTokenizer st = new StringTokenizer(label, "|");
+				label = st.nextToken();
+				StringTokenizer attrs = new StringTokenizer(st.nextToken(), ":;");
+				while (attrs.hasMoreTokens()) {
+					String name = attrs.nextToken();
+					if (st.hasMoreTokens()) {
+						String str = attrs.nextToken();
+						attributes.addAttribute("", name, name, "CDATA", str);
+					}
+				}
+			}
+
 			this.documentHandler.startElement(FOElementMapping.URI, "inline",
-					"inline", new AttributesImpl());
+					"inline", attributes);
 
 			if (label != null) {
 				this.documentHandler.characters(label.toCharArray(), 0,
