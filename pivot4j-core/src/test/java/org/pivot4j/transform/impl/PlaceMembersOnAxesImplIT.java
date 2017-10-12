@@ -8,11 +8,6 @@
  */
 package org.pivot4j.transform.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +19,11 @@ import org.olap4j.metadata.Cube;
 import org.olap4j.metadata.Hierarchy;
 import org.olap4j.metadata.Member;
 import org.pivot4j.transform.PlaceMembersOnAxes;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public class PlaceMembersOnAxesImplIT extends
 		AbstractTransformTestCase<PlaceMembersOnAxes> {
@@ -93,8 +93,8 @@ public class PlaceMembersOnAxesImplIT extends
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-						+ "CrossJoin({[Promotion Media].[All Media], [Promotion Media].[Bulk Mail], [Promotion Media].[Daily Paper]}, "
-						+ "{[Product].[Food], [Product].[Drink]}) ON ROWS FROM [Sales]")));
+						+ "CrossJoin({[Promotion Media].[All Media], [Promotion Media].[All Media].[Bulk Mail], [Promotion Media].[All Media].[Daily Paper]}, "
+						+ "{[Product].[All Products].[Food], [Product].[All Products].[Drink]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
 	}

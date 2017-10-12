@@ -8,16 +8,18 @@
  */
 package org.pivot4j.transform.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.olap4j.Axis;
 import org.olap4j.metadata.Cube;
 import org.olap4j.metadata.Hierarchy;
 import org.pivot4j.transform.PlaceHierarchiesOnAxes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<PlaceHierarchiesOnAxes> {
@@ -59,8 +61,8 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat("Unexpected MDX query", getPivotModel().getCurrentMdx(),
 				is(equalTo(
 						"SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-								+ "CrossJoin({[Promotion Media].[All Media]}, {[Product].[All Products], [Product].[Drink], "
-								+ "[Product].[Food], [Product].[Non-Consumable]}) ON ROWS FROM [Sales]")));
+								+ "CrossJoin({[Promotion Media].[All Media]}, {[Product].[All Products], [Product].[All Products].[Drink], "
+								+ "[Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
 	}
@@ -83,7 +85,7 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat("Unexpected MDX query after set hierarchies on axis", getPivotModel().getCurrentMdx(), is(
 				equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
 						+ "CrossJoin(Union({[Promotion Media].[All Media]}, [Promotion Media].[All Media].Children), "
-						+ "{[Product].[All Products], [Product].[Drink], [Product].[Food], [Product].[Non-Consumable]}) ON ROWS FROM [Sales]")));
+						+ "{[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
 	}
@@ -106,7 +108,7 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat("Unexpected MDX query after set hierarchies on axis", getPivotModel().getCurrentMdx(), is(
 				equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
 						+ "CrossJoin([Promotion Media].[All Media].Children, "
-						+ "{[Product].[All Products], [Product].[Drink], [Product].[Food], [Product].[Non-Consumable]}) ON ROWS FROM [Sales]")));
+						+ "{[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
 	}
@@ -124,7 +126,7 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat("Unexpected MDX query after adding a new hierarchy", getPivotModel().getCurrentMdx(),
 				is(equalTo(
 						"SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS"
-								+ ", CrossJoin({[Product].[All Products], [Product].[Drink], [Product].[Food], [Product].[Non-Consumable]}, "
+								+ ", CrossJoin({[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}, "
 								+ "{[Gender].[All Gender]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
@@ -143,7 +145,7 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat("Unexpected MDX query after adding a new hierarchy", getPivotModel().getCurrentMdx(),
 				is(equalTo(
 						"SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS"
-								+ ", CrossJoin({[Product].[All Products], [Product].[Drink], [Product].[Food], [Product].[Non-Consumable]}, "
+								+ ", CrossJoin({[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}, "
 								+ "{[Gender].[All Gender]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
@@ -162,8 +164,8 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat("Unexpected MDX query after adding a new hierarchy", getPivotModel().getCurrentMdx(),
 				is(equalTo(
 						"SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-								+ "CrossJoin({[Gender].[All Gender]}, {[Product].[All Products], [Product].[Drink], [Product].[Food], "
-								+ "[Product].[Non-Consumable]}) ON ROWS FROM [Sales]")));
+								+ "CrossJoin({[Gender].[All Gender]}, {[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Food], "
+								+ "[Product].[All Products].[Non-Consumable]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
 	}
@@ -187,13 +189,13 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat(getPivotModel().getCurrentMdx(),
 				is(equalTo(
 						"SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-								+ "CrossJoin({[Product].[All Products], [Product].[Drink], [Product].[Food], [Product].[Non-Consumable]}, "
-								+ "{[Promotion Media].[All Media], [Promotion Media].[Bulk Mail], [Promotion Media].[Cash Register Handout], "
-								+ "[Promotion Media].[Daily Paper], [Promotion Media].[Daily Paper, Radio], [Promotion Media].[Daily Paper, Radio, TV], "
-								+ "[Promotion Media].[In-Store Coupon], [Promotion Media].[No Media], [Promotion Media].[Product Attachment], "
-								+ "[Promotion Media].[Radio], [Promotion Media].[Street Handout], [Promotion Media].[Sunday Paper], "
-								+ "[Promotion Media].[Sunday Paper, Radio], [Promotion Media].[Sunday Paper, Radio, TV], "
-								+ "[Promotion Media].[TV]}) ON ROWS FROM [Sales]")));
+								+ "CrossJoin({[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}, "
+								+ "{[Promotion Media].[All Media], [Promotion Media].[All Media].[Bulk Mail], [Promotion Media].[All Media].[Cash Register Handout], "
+								+ "[Promotion Media].[All Media].[Daily Paper], [Promotion Media].[All Media].[Daily Paper, Radio], [Promotion Media].[All Media].[Daily Paper, Radio, TV], "
+								+ "[Promotion Media].[All Media].[In-Store Coupon], [Promotion Media].[All Media].[No Media], [Promotion Media].[All Media].[Product Attachment], "
+								+ "[Promotion Media].[All Media].[Radio], [Promotion Media].[All Media].[Street Handout], [Promotion Media].[All Media].[Sunday Paper], "
+								+ "[Promotion Media].[All Media].[Sunday Paper, Radio], [Promotion Media].[All Media].[Sunday Paper, Radio, TV], "
+								+ "[Promotion Media].[All Media].[TV]}) ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
 	}
@@ -202,7 +204,7 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 	public void testRemoveHierarchy() {
 		String query = "SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
 				+ "CrossJoin(Union({[Promotion Media].[All Media]}, [Promotion Media].[All Media].Children), "
-				+ "{[Product].[All Products], [Product].[Drink], [Product].[Food], [Product].[Non-Consumable]}) ON ROWS FROM [Sales]";
+				+ "{[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}) ON ROWS FROM [Sales]";
 
 		getPivotModel().setMdx(query);
 
@@ -217,12 +219,12 @@ public class PlaceHierarchiesOnAxesImplIT extends AbstractTransformTestCase<Plac
 		assertThat(getPivotModel().getCurrentMdx(),
 				is(equalTo(
 						"SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-								+ "{[Promotion Media].[All Media], [Promotion Media].[Bulk Mail], [Promotion Media].[Cash Register Handout], "
-								+ "[Promotion Media].[Daily Paper], [Promotion Media].[Daily Paper, Radio], [Promotion Media].[Daily Paper, Radio, TV], "
-								+ "[Promotion Media].[In-Store Coupon], [Promotion Media].[No Media], [Promotion Media].[Product Attachment], "
-								+ "[Promotion Media].[Radio], [Promotion Media].[Street Handout], [Promotion Media].[Sunday Paper], "
-								+ "[Promotion Media].[Sunday Paper, Radio], [Promotion Media].[Sunday Paper, Radio, TV], "
-								+ "[Promotion Media].[TV]} ON ROWS FROM [Sales]")));
+								+ "{[Promotion Media].[All Media], [Promotion Media].[All Media].[Bulk Mail], [Promotion Media].[All Media].[Cash Register Handout], "
+								+ "[Promotion Media].[All Media].[Daily Paper], [Promotion Media].[All Media].[Daily Paper, Radio], [Promotion Media].[All Media].[Daily Paper, Radio, TV], "
+								+ "[Promotion Media].[All Media].[In-Store Coupon], [Promotion Media].[All Media].[No Media], [Promotion Media].[All Media].[Product Attachment], "
+								+ "[Promotion Media].[All Media].[Radio], [Promotion Media].[All Media].[Street Handout], [Promotion Media].[All Media].[Sunday Paper], "
+								+ "[Promotion Media].[All Media].[Sunday Paper, Radio], [Promotion Media].[All Media].[Sunday Paper, Radio, TV], "
+								+ "[Promotion Media].[All Media].[TV]} ON ROWS FROM [Sales]")));
 
 		getPivotModel().getCellSet();
 	}

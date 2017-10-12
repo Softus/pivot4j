@@ -8,10 +8,6 @@
  */
 package org.pivot4j.transform.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +19,10 @@ import org.olap4j.metadata.Hierarchy;
 import org.olap4j.metadata.Level;
 import org.pivot4j.PivotModel;
 import org.pivot4j.transform.PlaceLevelsOnAxes;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class PlaceLevelsOnAxesImplIT extends
 		AbstractTransformTestCase<PlaceLevelsOnAxes> {
@@ -110,16 +110,16 @@ public class PlaceLevelsOnAxesImplIT extends
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-						+ "CrossJoin({[Promotion Media].[All Media], [Promotion Media].[Bulk Mail], [Promotion Media].[Cash Register Handout], "
-						+ "[Promotion Media].[Daily Paper], [Promotion Media].[Daily Paper, Radio], "
-						+ "[Promotion Media].[Daily Paper, Radio, TV], [Promotion Media].[In-Store Coupon], [Promotion Media].[No Media], "
-						+ "[Promotion Media].[Product Attachment], [Promotion Media].[Radio], [Promotion Media].[Street Handout], "
-						+ "[Promotion Media].[Sunday Paper], [Promotion Media].[Sunday Paper, Radio], "
-						+ "[Promotion Media].[Sunday Paper, Radio, TV], [Promotion Media].[TV]}, {[Product].[All Products], "
-						+ "[Product].[Drink], [Product].[Drink].[Alcoholic Beverages], [Product].[Drink].[Beverages], "
-						+ "[Product].[Drink].[Beverages].[Carbonated Beverages], [Product].[Drink].[Beverages].[Drinks], "
-						+ "[Product].[Drink].[Beverages].[Hot Beverages], [Product].[Drink].[Beverages].[Pure Juice Beverages], "
-						+ "[Product].[Drink].[Dairy], [Product].[Food], [Product].[Non-Consumable]}) ON ROWS "
+						+ "CrossJoin({[Promotion Media].[All Media], [Promotion Media].[All Media].[Bulk Mail], [Promotion Media].[All Media].[Cash Register Handout], "
+						+ "[Promotion Media].[All Media].[Daily Paper], [Promotion Media].[All Media].[Daily Paper, Radio], "
+						+ "[Promotion Media].[All Media].[Daily Paper, Radio, TV], [Promotion Media].[All Media].[In-Store Coupon], [Promotion Media].[All Media].[No Media], "
+						+ "[Promotion Media].[All Media].[Product Attachment], [Promotion Media].[All Media].[Radio], [Promotion Media].[All Media].[Street Handout], "
+						+ "[Promotion Media].[All Media].[Sunday Paper], [Promotion Media].[All Media].[Sunday Paper, Radio], "
+						+ "[Promotion Media].[All Media].[Sunday Paper, Radio, TV], [Promotion Media].[All Media].[TV]}, {[Product].[All Products], "
+						+ "[Product].[All Products].[Drink], [Product].[All Products].[Drink].[Alcoholic Beverages], [Product].[All Products].[Drink].[Beverages], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Carbonated Beverages], [Product].[All Products].[Drink].[Beverages].[Drinks], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Hot Beverages], [Product].[All Products].[Drink].[Beverages].[Pure Juice Beverages], "
+						+ "[Product].[All Products].[Drink].[Dairy], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}) ON ROWS "
 						+ "FROM [Sales] WHERE [Time].[1997]")));
 	}
 
@@ -138,11 +138,11 @@ public class PlaceLevelsOnAxesImplIT extends
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-						+ "CrossJoin({[Gender].[F], [Gender].[M]}, CrossJoin({[Promotion Media].[All Media]}, {[Product].[All Products], "
-						+ "[Product].[Drink], [Product].[Drink].[Alcoholic Beverages], [Product].[Drink].[Beverages], "
-						+ "[Product].[Drink].[Beverages].[Carbonated Beverages], [Product].[Drink].[Beverages].[Drinks], "
-						+ "[Product].[Drink].[Beverages].[Hot Beverages], [Product].[Drink].[Beverages].[Pure Juice Beverages], "
-						+ "[Product].[Drink].[Dairy], [Product].[Food], [Product].[Non-Consumable]})) ON ROWS "
+						+ "CrossJoin({[Gender].[All Gender].[F], [Gender].[All Gender].[M]}, CrossJoin({[Promotion Media].[All Media]}, {[Product].[All Products], "
+						+ "[Product].[All Products].[Drink], [Product].[All Products].[Drink].[Alcoholic Beverages], [Product].[All Products].[Drink].[Beverages], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Carbonated Beverages], [Product].[All Products].[Drink].[Beverages].[Drinks], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Hot Beverages], [Product].[All Products].[Drink].[Beverages].[Pure Juice Beverages], "
+						+ "[Product].[All Products].[Drink].[Dairy], [Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]})) ON ROWS "
 						+ "FROM [Sales] WHERE [Time].[1997]")));
 	}
 
@@ -165,7 +165,7 @@ public class PlaceLevelsOnAxesImplIT extends
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-						+ "CrossJoin({[Gender].[All Gender]}, {[Store].[Canada], [Store].[Mexico], [Store].[USA]}) ON ROWS "
+						+ "CrossJoin({[Gender].[All Gender]}, {[Store].[All Stores].[Canada], [Store].[All Stores].[Mexico], [Store].[All Stores].[USA]}) ON ROWS "
 						+ "FROM [Sales] WHERE [Time].[1997]")));
 	}
 
@@ -184,12 +184,12 @@ public class PlaceLevelsOnAxesImplIT extends
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-						+ "CrossJoin({[Promotion Media].[All Media]}, CrossJoin({[Gender].[F], [Gender].[M]}, "
-						+ "{[Product].[All Products], [Product].[Drink], [Product].[Drink].[Alcoholic Beverages], "
-						+ "[Product].[Drink].[Beverages], [Product].[Drink].[Beverages].[Carbonated Beverages], "
-						+ "[Product].[Drink].[Beverages].[Drinks], [Product].[Drink].[Beverages].[Hot Beverages], "
-						+ "[Product].[Drink].[Beverages].[Pure Juice Beverages], [Product].[Drink].[Dairy], "
-						+ "[Product].[Food], [Product].[Non-Consumable]})) ON ROWS FROM [Sales] WHERE [Time].[1997]")));
+						+ "CrossJoin({[Promotion Media].[All Media]}, CrossJoin({[Gender].[All Gender].[F], [Gender].[All Gender].[M]}, "
+						+ "{[Product].[All Products], [Product].[All Products].[Drink], [Product].[All Products].[Drink].[Alcoholic Beverages], "
+						+ "[Product].[All Products].[Drink].[Beverages], [Product].[All Products].[Drink].[Beverages].[Carbonated Beverages], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Drinks], [Product].[All Products].[Drink].[Beverages].[Hot Beverages], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Pure Juice Beverages], [Product].[All Products].[Drink].[Dairy], "
+						+ "[Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]})) ON ROWS FROM [Sales] WHERE [Time].[1997]")));
 	}
 
 	@Test
@@ -207,11 +207,11 @@ public class PlaceLevelsOnAxesImplIT extends
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-						+ "CrossJoin({[Promotion Media].[All Media]}, CrossJoin({[Product].[All Products], [Product].[Drink], "
-						+ "[Product].[Drink].[Alcoholic Beverages], [Product].[Drink].[Beverages], [Product].[Drink].[Beverages].[Carbonated Beverages], "
-						+ "[Product].[Drink].[Beverages].[Drinks], [Product].[Drink].[Beverages].[Hot Beverages], "
-						+ "[Product].[Drink].[Beverages].[Pure Juice Beverages], [Product].[Drink].[Dairy], [Product].[Food], "
-						+ "[Product].[Non-Consumable]}, {[Gender].[F], [Gender].[M]})) ON ROWS FROM [Sales] WHERE [Time].[1997]")));
+						+ "CrossJoin({[Promotion Media].[All Media]}, CrossJoin({[Product].[All Products], [Product].[All Products].[Drink], "
+						+ "[Product].[All Products].[Drink].[Alcoholic Beverages], [Product].[All Products].[Drink].[Beverages], [Product].[All Products].[Drink].[Beverages].[Carbonated Beverages], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Drinks], [Product].[All Products].[Drink].[Beverages].[Hot Beverages], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Pure Juice Beverages], [Product].[All Products].[Drink].[Dairy], [Product].[All Products].[Food], "
+						+ "[Product].[All Products].[Non-Consumable]}, {[Gender].[All Gender].[F], [Gender].[All Gender].[M]})) ON ROWS FROM [Sales] WHERE [Time].[1997]")));
 	}
 
 	@Test
@@ -230,10 +230,10 @@ public class PlaceLevelsOnAxesImplIT extends
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
 				is(equalTo("SELECT {[Measures].[Unit Sales], [Measures].[Store Cost], [Measures].[Store Sales]} ON COLUMNS, "
-						+ "CrossJoin({[Promotion Media].[All Media]}, {[Product].[All Products], [Product].[Drink], "
-						+ "[Product].[Drink].[Beverages].[Carbonated Beverages], [Product].[Drink].[Beverages].[Drinks], "
-						+ "[Product].[Drink].[Beverages].[Hot Beverages], [Product].[Drink].[Beverages].[Pure Juice Beverages], "
-						+ "[Product].[Food], [Product].[Non-Consumable]}) ON ROWS FROM [Sales] WHERE [Time].[1997]")));
+						+ "CrossJoin({[Promotion Media].[All Media]}, {[Product].[All Products], [Product].[All Products].[Drink], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Carbonated Beverages], [Product].[All Products].[Drink].[Beverages].[Drinks], "
+						+ "[Product].[All Products].[Drink].[Beverages].[Hot Beverages], [Product].[All Products].[Drink].[Beverages].[Pure Juice Beverages], "
+						+ "[Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}) ON ROWS FROM [Sales] WHERE [Time].[1997]")));
 	}
 
 	@Test
@@ -258,7 +258,7 @@ public class PlaceLevelsOnAxesImplIT extends
 		assertThat(
 				"Unexpected MDX query",
 				getPivotModel().getCurrentMdx(),
-				is(equalTo("SELECT {[Measures].[Unit Sales]} ON COLUMNS, CrossJoin({[Product].[Food], [Product].[Non-Consumable]}, "
-						+ "{[Gender].[All Gender], [Gender].[F], [Gender].[M]}) ON ROWS FROM [Sales]")));
+				is(equalTo("SELECT {[Measures].[Unit Sales]} ON COLUMNS, CrossJoin({[Product].[All Products].[Food], [Product].[All Products].[Non-Consumable]}, "
+						+ "{[Gender].[All Gender], [Gender].[All Gender].[F], [Gender].[All Gender].[M]}) ON ROWS FROM [Sales]")));
 	}
 }
