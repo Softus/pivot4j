@@ -14,7 +14,7 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>edu.tum.cs</groupId>
+				<groupId>com.github.vbmacher</groupId>
 				<artifactId>cup-maven-plugin</artifactId>
 				<version>${version.plugin.cup}</version>
 				<executions>
@@ -223,7 +223,6 @@
 			<groupId>pentaho</groupId>
 			<artifactId>mondrian</artifactId>
 			<version>${version.mondrian}</version>
-			<scope>test</scope>
 			<exclusions>
 				<exclusion>
 					<artifactId>log4j</artifactId>
