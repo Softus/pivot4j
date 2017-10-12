@@ -94,6 +94,7 @@ terminal
   EMPTY,
   END,
   FROM,
+  IS,
   MEMBER,
   NON,
   NOT,
@@ -308,7 +309,7 @@ value_expression ::= term5:t {: RESULT = t; :}
 		{: RESULT = new FunCall("XOR", Syntax.Infix, Arrays.asList(new Exp[] { x, y })); :};
 
 term5 ::= term4:t {: RESULT = t; :}
-  | term5:x AND term4:y 
+  | term5:x AND term4:y
 		{: RESULT = new FunCall("AND", Syntax.Infix, Arrays.asList(new Exp[] { x, y })); :};
 
 term4 ::= term3:t {: RESULT = t; :}
@@ -317,7 +318,11 @@ term4 ::= term3:t {: RESULT = t; :}
 
 term3 ::= term2:t {: RESULT = t; :}
   | term3:x comp_op:op term2:y 
-		{: RESULT = new FunCall(op, Syntax.Infix, Arrays.asList(new Exp[] { x, y })); :}; // e.g. 1 < 5 
+		{: RESULT = new FunCall(op, Syntax.Infix, Arrays.asList(new Exp[] { x, y })); :} // e.g. 1 < 5
+  | term3:x AS term2:y
+        {: RESULT = new FunCall("AS", Syntax.Infix, Arrays.asList(new Exp[] { x, y })); :}
+  | term3:x IS term2:y
+        {: RESULT = new FunCall("IS", Syntax.Infix, Arrays.asList(new Exp[] { x, y })); :};
 
 term2 ::= term:t {: RESULT = t; :}
 	| term2:x PLUS term:y
@@ -381,9 +386,9 @@ value_expression_primary ::= STRING:s
 		:}
 	| member_param:e {: RESULT = e; :}
 	| value_param:e {: RESULT = e; :}
-	| case_expression;
+	| case_expression:e {: RESULT = e; :};
 
-case_expression ::= CASE value_expression_opt:x when_list:y else_clause_opt:z END 
+case_expression ::= CASE value_expression_opt:x when_list:y else_clause_opt:z END
 	{: List<Exp> v = new ArrayList<Exp>();
   	if (x != null) {
     	v.add(x);
@@ -405,7 +410,7 @@ case_expression ::= CASE value_expression_opt:x when_list:y else_clause_opt:z EN
   :};
 
 value_expression_opt ::= /* empty */
-	| value_expression;
+	| value_expression:x {: RESULT = x; :};
 
 when_list ::= /* empty */ {:RESULT = new ArrayList<Exp[]>(); :}
 	| when_list:x when_clause:y {: RESULT = x; x.add(y); :};

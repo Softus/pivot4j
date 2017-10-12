@@ -8,28 +8,17 @@
  */
 package org.pivot4j.mdx;
 
+import java.util.List;
+
+import org.junit.Test;
+import org.olap4j.Axis;
+import org.pivot4j.mdx.impl.MdxParserImpl;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-
-import java.util.List;
-
-import org.junit.Test;
-import org.olap4j.Axis;
-import org.pivot4j.mdx.CompoundId;
-import org.pivot4j.mdx.Exp;
-import org.pivot4j.mdx.ExpressionParameter;
-import org.pivot4j.mdx.Formula;
-import org.pivot4j.mdx.FunCall;
-import org.pivot4j.mdx.MdxParser;
-import org.pivot4j.mdx.MdxStatement;
-import org.pivot4j.mdx.QueryAxis;
-import org.pivot4j.mdx.SapVariable;
-import org.pivot4j.mdx.Syntax;
-import org.pivot4j.mdx.ValueParameter;
-import org.pivot4j.mdx.impl.MdxParserImpl;
 
 public class MdxParserTest {
 
@@ -555,5 +544,17 @@ public class MdxParserTest {
 
 		MdxStatement query = parseQuery(mdx);
 		assertThat("Failed to parse : " + mdx, query, is(notNullValue()));
+	}
+
+	@Test
+	public void testCastAs() throws Exception {
+		String mdx = "WITH SET [NS:Payment Types] AS '{[Payment Type].[All Payment Types].[Paid].Children}' MEMBER [Payment Type].[M:Payment Types Total] AS 'Aggregate([NS:Payment Types])',MEMBER_CAPTION = 'Всего' SET [NS:Week] AS 'DaysOfWeek([Time], 7.0 * Parameter(\"TimeOffset\", NUMERIC, 0.0))' MEMBER [Time].[All Times].[M:Week] AS 'Aggregate([NS:Week])',MEMBER_CAPTION = 'Неделя' SET [NS:Month] AS '{[Time].Month(WEEK)}' MEMBER [Measures].[M:Quantity] AS '[Measures].[Quantity]',MEMBER_CAPTION = 'Кол.',FORMAT = '#,##0' MEMBER [Measures].[M:Revenue] AS 'Iif(CoalesceEmpty([Measures].[Revenue], 0.0) > 0.0, [Measures].[Revenue], null)',MEMBER_CAPTION = 'Выр. (р)',FORMAT = '#,##0.00' SELECT {[NS:Week], [Time].[All Times].[M:Week], [NS:Month]} * {[Measures].[M:Quantity], [Measures].[M:Revenue]} ON COLUMNS, NON EMPTY {[NS:Payment Types], [Payment Type].[M:Payment Types Total]} * Descendants([Doctor].[All Doctors].Children) ON ROWS FROM [Studies]";
+		MdxStatement query = parseQuery(mdx);
+
+		assertThat("Failed to parse : " + mdx, query, is(notNullValue()));
+		assertThat("Axes should not be null.", query.getAxes(),
+		is(notNullValue()));
+		assertThat("Number of axes should be 1.", query.getAxes().size(), is(2));
+		assertThat("Wrong reassembled query", query.toString().toLowerCase(), is(equalTo(mdx.toLowerCase())));
 	}
 }

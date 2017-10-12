@@ -34,6 +34,7 @@ ELSE=[Ee][Ll][Ss][Ee]
 EMPTY=[Ee][Mm][Pp][Tt][Yy]
 END=[Ee][Nn][Dd]
 FROM=[Ff][Rr][Oo][Mm]
+IS=[Ii][Ss]
 MEMBER=[Mm][Ee][Mm][Bb][Ee][Rr]
 NON=[Nn][Oo][Nn]
 NOT=[Nn][Oo][Tt]
@@ -85,6 +86,7 @@ FLOAT=({DIGIT}+\.{DIGIT}*{EXP}?|{DIGIT}*\.{DIGIT}+{EXP}?|{DIGIT}+{EXP})
 {EMPTY} { return new Symbol(Symbols.EMPTY, "EMPTY"); }
 {END} { return new Symbol(Symbols.END, "END"); }
 {FROM} { return new Symbol(Symbols.FROM, "FROM"); }
+{IS} { return new Symbol(Symbols.IS, "IS"); }
 {MEMBER} { return new Symbol(Symbols.MEMBER, "MEMBER"); }
 {NON} { return new Symbol(Symbols.NON, "NON"); }
 {NOT} { return new Symbol(Symbols.NOT, "NOT"); }
@@ -113,7 +115,9 @@ FLOAT=({DIGIT}+\.{DIGIT}*{EXP}?|{DIGIT}*\.{DIGIT}+{EXP}?|{DIGIT}+{EXP})
 "{" { return new Symbol(Symbols.LBRACE, "{"); }
 "(" { return new Symbol(Symbols.LPAREN, "("); }
 "}" { return new Symbol(Symbols.RBRACE, "}"); }
-")" { return new Symbol(Symbols.RPAREN, ")"); }
+<YYINITIAL> ")" { return new Symbol(Symbols.RPAREN, ")"); }
+<AFTER_AS1> ")" {yybegin(YYINITIAL); return new Symbol(Symbols.RPAREN, ")"); }
+<AFTER_AS2> ")" { return new Symbol(Symbols.RPAREN, ")"); }
 "+" { return new Symbol(Symbols.PLUS, "+"); }
 "-" { return new Symbol(Symbols.MINUS, "-"); }
 "*" { return new Symbol(Symbols.ASTERISK, "*"); }

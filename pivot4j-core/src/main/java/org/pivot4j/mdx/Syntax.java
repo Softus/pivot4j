@@ -164,8 +164,21 @@ public enum Syntax {
 	Case(7) {
 		@Override
 		public String toMdx(String function, List<Exp> args) {
-			throw new UnsupportedOperationException(
-					"Unsupported operation for this syntatic type : " + name());
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+			sb.append("CASE");
+			if ("_CaseMatch".equals(function)) {
+				sb.append(" ").append(args.get(i++));
+			}
+			while (i < args.size() - 1) {
+				sb.append(" WHEN ").append(args.get(i++))
+					.append(" THEN ").append(args.get(i++));
+			}
+			if (i < args.size()) {
+				sb.append(" ELSE ").append(args.get(i));
+			}
+
+			return sb.append(" END").toString();
 		}
 	},
 
