@@ -124,9 +124,9 @@ public interface PivotModel extends Configurable, Bookmarkable {
 	 */
 	void setLocale(Locale locale);
 
-	String getRoleName();
+	List<String> getRoleNames();
 
-	void setRoleName(String roleName);
+	void setRoleNames(List<String> roleNames);
 
 	ExpressionContext getExpressionContext();
 

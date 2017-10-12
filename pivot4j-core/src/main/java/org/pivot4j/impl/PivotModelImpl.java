@@ -58,6 +58,8 @@ import org.pivot4j.util.OlapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import mondrian.olap4j.MondrianOlap4jConnection;
+
 /**
  * The pivot model represents all (meta-)data for an MDX query.
  */
@@ -69,7 +71,7 @@ public class PivotModelImpl implements PivotModel {
 
 	private OlapConnection connection;
 
-	private String roleName;
+	private List<String> roleNames;
 
 	private Locale locale;
 
@@ -162,23 +164,23 @@ public class PivotModelImpl implements PivotModel {
 
 	/**
 	 * @return the roleName
-	 * @see org.pivot4j.PivotModel#getRoleName()
+	 * @see org.pivot4j.PivotModel#getRoleNames
 	 */
-	public String getRoleName() {
-		return roleName;
+	public List<String> getRoleNames() {
+		return roleNames;
 	}
 
 	/**
-	 * @param roleName
+	 * @param roleNames
 	 *            the roleName to set
-	 * @see org.pivot4j.PivotModel#setRoleName(java.lang.String)
+	 * @see org.pivot4j.PivotModel#setRoleNames
 	 */
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setRoleNames(List<String> roleNames) {
+		this.roleNames = roleNames;
 
 		if (connection != null) {
 			try {
-				connection.setRoleName(roleName);
+				((MondrianOlap4jConnection)connection).setRoleNames(roleNames);
 			} catch (OlapException e) {
 				throw new PivotException(e);
 			}
@@ -259,8 +261,8 @@ public class PivotModelImpl implements PivotModel {
 			throws SQLException {
 		OlapConnection con = dataSource.getConnection();
 
-		if (roleName != null) {
-			con.setRoleName(roleName);
+		if (roleNames != null) {
+			((MondrianOlap4jConnection)con).setRoleNames(roleNames);
 		}
 
 		if (locale != null) {
@@ -326,11 +328,11 @@ public class PivotModelImpl implements PivotModel {
 			}
 		});
 
-		context.put("roleName", new ExpressionContext.ValueBinding<String>() {
+		context.put("roleNames", new ExpressionContext.ValueBinding<List<String>>() {
 
 			@Override
-			public String getValue() {
-				return getRoleName();
+			public List<String> getValue() {
+				return getRoleNames();
 			}
 		});
 
@@ -713,7 +715,7 @@ public class PivotModelImpl implements PivotModel {
 
 		String mdx = normalizeMdx(mdxQuery);
 		if (!mdx.equals(normalizeMdx(getCurrentMdx()))) {
-			onMdxChanged(mdx);
+			onMdxChanged(mdxQuery);
 		}
 	}
 

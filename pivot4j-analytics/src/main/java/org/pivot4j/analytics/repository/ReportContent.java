@@ -9,9 +9,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -206,6 +214,8 @@ public class ReportContent implements Serializable {
 			e.printStackTrace();
 		}
 
+		setupRoles(model);
+
 		Map<String, Object> parameters = state.getParameters();
 
 		if (parameters == null) {
@@ -248,6 +258,55 @@ public class ReportContent implements Serializable {
 		}
 
 		return state;
+	}
+
+	private void setupRoles(PivotModel model)
+	{
+		ExternalContext ctx = FacesContext
+			.getCurrentInstance().getExternalContext();
+
+		HttpServletRequest request = (HttpServletRequest)ctx.getRequest();
+
+		try
+		{
+			final ResourceBundle res = ResourceBundle.getBundle("mondrianRoles");
+			final String roles = res.getString("user.roles");
+
+			final Set<String> authorizedRoles = new HashSet<String>();
+			authorizedRoles.add("Common");
+
+			for (final String role : roles.split("\\s+"))
+			{
+				if (request.isUserInRole(role))
+				{
+					final String monRolesKey = "mondrian.role." + role;
+
+					if (res.containsKey(monRolesKey))
+					{
+						for (final String monRole : res.getString(monRolesKey).split("\\s+"))
+						{
+							if (monRole.length() > 0)
+								authorizedRoles.add(monRole);
+						}
+					}
+				}
+			}
+
+			final StringBuilder sb = new StringBuilder(256);
+
+			for (String authorizedRole : authorizedRoles)
+			{
+				if (sb.length() > 0)
+					sb.append(',');
+				sb.append(authorizedRole);
+			}
+
+			model.setRoleNames(new ArrayList<String>(authorizedRoles));
+		}
+		catch (java.util.MissingResourceException ignored)
+		{
+		}
+
 	}
 
 	/**
