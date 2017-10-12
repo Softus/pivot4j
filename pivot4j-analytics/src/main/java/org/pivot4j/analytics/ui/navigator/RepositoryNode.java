@@ -13,6 +13,7 @@ import javax.faces.component.StateHolder;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -134,7 +135,7 @@ public class RepositoryNode extends LazyTreeNode<ReportFile> implements
 	 */
 	@Override
 	protected NodeData createData(ReportFile object) {
-		return new NodeData(object.getPath(), object.getName());
+		return new NodeData(object.getPath(), FilenameUtils.getBaseName(object.getName()));
 	}
 
 	/**
