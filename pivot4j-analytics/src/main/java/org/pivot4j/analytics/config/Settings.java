@@ -81,6 +81,9 @@ public class Settings {
 		String path = StringUtils.trimToNull(externalContext
 				.getInitParameter(APPLICATION_HOME));
 		if (path == null) {
+			path = StringUtils.trimToNull(System.getProperty(APPLICATION_HOME));
+		}
+		if (path == null) {
 			if (logger.isInfoEnabled()) {
 				logger.info("Parameter 'applicationHome' is not set. Using the default path.");
 			}
@@ -106,6 +109,9 @@ public class Settings {
 		try {
 			String configPath = StringUtils.trimToNull(externalContext
 					.getInitParameter(CONFIG_FILE));
+			if (configPath == null) {
+				configPath = StringUtils.trimToNull(System.getProperty(CONFIG_FILE));
+			}
 			if (configPath == null || stage == ProjectStage.UnitTest) {
 				configPath = path + File.separator + "pivot4j-config.xml";
 
@@ -115,8 +121,10 @@ public class Settings {
 					String defaultConfig = "/WEB-INF/pivot4j-config.xml";
 
 					if (logger.isInfoEnabled()) {
-						logger.info("Config file does not exist. Using default : "
-								+ defaultConfig);
+						logger.info("Config file "
+							+ configFile.getAbsolutePath()
+							+ " does not exist. Using default : "
+							+ defaultConfig);
 					}
 
 					ServletContext servletContext = (ServletContext) externalContext

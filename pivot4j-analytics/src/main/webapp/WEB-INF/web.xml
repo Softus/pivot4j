@@ -10,7 +10,7 @@
             the following values: Development, Production, SystemTest, UnitTest
         </description>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Production</param-value>
+		<param-value>Development</param-value>
 	</context-param>
 	<context-param>
 		<description>
@@ -90,36 +90,6 @@
 	<welcome-file-list>
 		<welcome-file>index.xhtml</welcome-file>
 	</welcome-file-list>
-
-	<!-- Define a Security Constraint on this Application -->
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>Protected Area</web-resource-name>
-			<!-- Define the context-relative URL(s) to be protected -->
-			<url-pattern>/*</url-pattern>
-			<!-- If you list http methods, only those methods are protected -->
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>bi_reports</role-name>
-			<role-name>it_razrabotka</role-name>
-		</auth-constraint>
-	</security-constraint>
-
-	<!-- Define the Login Configuration for this Application -->
-	<login-config>
-		<auth-method>BASIC</auth-method>
-		<realm-name>IDC Bussines Reports</realm-name>
-	</login-config>
-
-	<!-- Security roles referenced by this web application -->
-	<security-role>
-		<description>The production role that is required to log in to the IDC Bussines Reports</description>
-		<role-name>bi_reports</role-name>
-	</security-role>
-	<security-role>
-		<description>The development role that is required to log in to the IDC Bussines Reports</description>
-		<role-name>it_razrabotka</role-name>
-	</security-role>
 
 	<session-config>
 		<!-- Session idle timeout in min. Some queries are too slow. -->
